@@ -32,9 +32,12 @@ unsigned long long *factorize(long n)
 	{
 		if (n % i == 0)
 		{
-			r[0] = (unsigned long long)i;
-			r[1] = (unsigned long long)n / i;
-			return (r);
+			if (is_prime((unsigned long long)i) && is_prime((unsigned long long)n / i))
+			{
+				r[0] = (unsigned long long)i;
+				r[1] = (unsigned long long)n / i;
+				return (r);
+			}
 		}
 	}
 
@@ -64,14 +67,14 @@ int main(int argc, char *argv[])
 	if (fp == NULL)
 		exit(EXIT_FAILURE);
 
-	factors = factorize(4);
-
 	while ((read = getline(&line, &len, fp)) != -1)
 	{
 		number = strtoull(line, &ptr, 10);
-		factors = factorize(number);
-
-		printf("%llu=%llu*%llu\n", number, factors[0], factors[1]);
+		if (number <= 18446744073709551615)
+		{
+			factors = factorize(number);
+			printf("%llu=%llu*%llu\n", number, factors[1], factors[0]);
+		}
 	}
 
 	fclose(fp);
